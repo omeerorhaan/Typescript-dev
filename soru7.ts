@@ -1,11 +1,22 @@
-type FilterUnion<T, U> = T extends U ? never : T;
-type AllStatus = 'pending' | 'active' | 'inactive' | 'deleted';
-type ActiveStatus = 'active' | 'pending';
-type InactiveStatus = FilterUnion<AllStatus, ActiveStatus>;
+type User = { id: number; name: string; email: string };
+const users: User[] = [
+  { id: 1, name: "Ali", email: "ali@mail.com" },
+  { id: 2, name: "Ayşe", email: "ayse@mail.com" },
+];
 
-let status1: InactiveStatus = 'inactive';
-let status2: InactiveStatus = 'deleted';
-// @ts-expect-error - 'pending' (filtrelendi) HATA VERMELİDİR
-let errorStatus: InactiveStatus = 'pending';
+function updateUser(
+  id: number,
+  updates: Partial<User>
+): Readonly<User> | undefined {
+  const user = users.find((u) => u.id === id);
+  if (!user) {
+    return undefined;
+  }
 
-console.log("Soru 17 Başarılı!", status1, status2);
+  const updatedUser = { ...user, ...updates };
+  return updatedUser;
+}
+
+console.log("Eski: ", users[0]);
+const updatedUser = updateUser(1, { email: "ali.yeni@mail.com" });
+console.log("Yeni: ", updatedUser);
